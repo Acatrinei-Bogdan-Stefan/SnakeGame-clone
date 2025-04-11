@@ -1,33 +1,52 @@
 #include <iostream>
-// #include <raylib.h>
+#include <raylib.h>  
 
 using namespace std;
 
+Color Green = {173,204,96,255};
+Color darkGreen = {43,51,24,255};
+
+int cellSize = 30;
+int cellCount = 25;
+
+class Food
+{
+    public:
+    Vector2 position = {5, 6};
+
+    Food()
+    {
+        
+    }
+
+    void Draw()
+    {
+        DrawRectangle(position.x * cellSize, position.y * cellSize, cellSize, cellSize, darkGreen);
+    }
+};
+
 int main () {
 
-    // const int SCREEN_WIDTH = 800;
-    // const int SCREEN_HEIGHT = 600;
-
-   
+    Food food = Food();
 
     cout << "Hello World" << endl;
 
-    // InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "My first RAYLIB program!");
-    // SetTargetFPS(60);
+    InitWindow(cellSize * cellCount,cellSize * cellCount, "Snake Clone");
+    SetTargetFPS(60);
 
-    // while (WindowShouldClose() == false){
+    while (WindowShouldClose() == false){
    
-    //     //Update
+        // Update
 
        
-    //     // Draw
-    //     BeginDrawing();
-    //         ClearBackground(BLACK);
-
+        // Draw
+        BeginDrawing();
+            ClearBackground(Green);
+            food.Draw();   
             
-    //     EndDrawing();
-    // }
+        EndDrawing();
+    }
 
-    // CloseWindow();
+    CloseWindow();
     return 0;
 }
