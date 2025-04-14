@@ -13,15 +13,23 @@ class Food
 {
     public:
     Vector2 position = {5, 6};
+    Texture2D texture;
 
     Food()
     {
-        
+        Image image = LoadImage("Graphics/food.png");
+        texture = LoadTextureFromImage(image);
+        UnloadImage(image);
+    }
+
+    ~Food()
+    {
+        UnloadTexture(texture);
     }
 
     void Draw()
     {
-        DrawRectangle(position.x * cellSize, position.y * cellSize, cellSize, cellSize, darkGreen);
+        DrawTexture(texture, position.x * cellSize, position.y * cellSize, WHITE);
     }
 };
 
@@ -31,7 +39,7 @@ int main () {
 
     cout << "Hello World" << endl;
 
-    InitWindow(cellSize * cellCount,cellSize * cellCount, "Snake Clone");
+    InitWindow(cellSize * cellCount, cellSize * cellCount, "Snake Clone");
     SetTargetFPS(60);
 
     while (WindowShouldClose() == false){
