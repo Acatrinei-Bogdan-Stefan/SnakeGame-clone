@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <deque>
 #include <raymath.h>
+#include "button.hpp"
 
 using namespace std;
 
@@ -211,47 +212,86 @@ int main()
 
     Game game = Game();
 
-    while (WindowShouldClose() == false)
+    Texture2D background = LoadTexture("Graphics/background.png");
+    background.width = offset * 2 + cellSize * cellCount;
+    background.height = offset * 2 + cellSize * cellCount;
+    Button startButton{"Graphics/start_button.png", {350, 450}, 0.65};
+    Button exitButton{"Graphics/exit_button.png", {350, 650}, 0.65};
+    bool exit = false;
+    bool menu = true;
+
+
+    while (!WindowShouldClose() && exit == false  )
     {
+
         BeginDrawing();
+        
+        Vector2 mousePosition = GetMousePosition();
+        bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 
-        if (EventTriggered(0.2))
+        if(menu == true){ 
+            
+            DrawTexture(background,0, 0, WHITE);
+            DrawText("Retro Snake", 170, 200, 90, darkGreen);
+            startButton.Draw();
+            exitButton.Draw();
+
+            if(startButton.isPressed(mousePosition, mousePressed))
+            {
+                menu = false;
+            }
+            else if(exitButton.isPressed(mousePosition, mousePressed))
+            {
+                exit = true;
+            }
+
+        } else
         {
-            allowMove = true;
-            game.Update();
+            if (EventTriggered(0.2))
+            {
+                allowMove = true;
+                game.Update();
+            }
+
+            if (IsKeyPressed(KEY_UP) && game.snake.direction.y != 1 && allowMove)
+            {
+                game.snake.direction = {0, -1};
+                game.running = true;
+                allowMove = false;
+            }
+            if (IsKeyPressed(KEY_DOWN) && game.snake.direction.y != -1 && allowMove)
+            {
+                game.snake.direction = {0, 1};
+                game.running = true;
+                allowMove = false;
+            }
+            if (IsKeyPressed(KEY_LEFT) && game.snake.direction.x != 1 && allowMove)
+            {
+                game.snake.direction = {-1, 0};
+                game.running = true;
+                allowMove = false;
+            }
+            if (IsKeyPressed(KEY_RIGHT) && game.snake.direction.x != -1 && allowMove)
+            {
+                game.snake.direction = {1, 0};
+                game.running = true;
+                allowMove = false;
+            }
+
+            // Drawing
+            ClearBackground(green);
+            DrawRectangleLinesEx(Rectangle{(float)offset - 5, (float)offset - 5, (float)cellSize * cellCount + 10, (float)cellSize * cellCount + 10}, 5, darkGreen);
+            DrawText("Retro Snake", offset - 5, 20, 40, darkGreen);
+            DrawText(TextFormat("%i", game.score), offset - 5, offset + cellSize * cellCount + 10, 40, darkGreen);
+            game.Draw();
         }
 
-        if (IsKeyPressed(KEY_UP) && game.snake.direction.y != 1 && allowMove)
-        {
-            game.snake.direction = {0, -1};
-            game.running = true;
-            allowMove = false;
-        }
-        if (IsKeyPressed(KEY_DOWN) && game.snake.direction.y != -1 && allowMove)
-        {
-            game.snake.direction = {0, 1};
-            game.running = true;
-            allowMove = false;
-        }
-        if (IsKeyPressed(KEY_LEFT) && game.snake.direction.x != 1 && allowMove)
-        {
-            game.snake.direction = {-1, 0};
-            game.running = true;
-            allowMove = false;
-        }
-        if (IsKeyPressed(KEY_RIGHT) && game.snake.direction.x != -1 && allowMove)
-        {
-            game.snake.direction = {1, 0};
-            game.running = true;
-            allowMove = false;
-        }
 
-        // Drawing
-        ClearBackground(green);
-        DrawRectangleLinesEx(Rectangle{(float)offset - 5, (float)offset - 5, (float)cellSize * cellCount + 10, (float)cellSize * cellCount + 10}, 5, darkGreen);
-        DrawText("Retro Snake", offset - 5, 20, 40, darkGreen);
-        DrawText(TextFormat("%i", game.score), offset - 5, offset + cellSize * cellCount + 10, 40, darkGreen);
-        game.Draw();
+        
+
+       
+
+
 
         EndDrawing();
     }
