@@ -212,11 +212,13 @@ int main()
 
     Game game = Game();
 
-    Texture2D background = LoadTexture("Graphics/background.png");
-    background.width = offset * 2 + cellSize * cellCount;
-    background.height = offset * 2 + cellSize * cellCount;
-    Button startButton{"Graphics/start_button.png", {350, 450}, 0.65};
-    Button exitButton{"Graphics/exit_button.png", {350, 650}, 0.65};
+    // Texture2D background = LoadTexture("Graphics/background.png");
+    // background.width = offset * 2 + cellSize * cellCount;
+    // background.height = offset * 2 + cellSize * cellCount;
+    Button startButton{"Graphics/backToMenu.png", {290, 400}, 0.65};
+    Button exitButton{"Graphics/backToMenu.png", {290, 600}, 0.65};
+    Button backToMenuButton{"Graphics/backToMenu.png", {687, 10}, 0.30};
+    
     bool exit = false;
     bool menu = true;
 
@@ -231,17 +233,23 @@ int main()
 
         if(menu == true){ 
             
-            DrawTexture(background,0, 0, WHITE);
+            // DrawTexture(background,0, 0, WHITE);
+            
             DrawText("Retro Snake", 170, 200, 90, darkGreen);
             startButton.Draw();
+            DrawText("Start Game", 340, 450, 40, darkGreen);
             exitButton.Draw();
+            DrawText("Exit", 415, 650, 40, darkGreen);
+            ClearBackground(green);
 
             if(startButton.isPressed(mousePosition, mousePressed))
             {
+                PlaySound(game.wallSound);
                 menu = false;
             }
             else if(exitButton.isPressed(mousePosition, mousePressed))
             {
+                PlaySound(game.wallSound);
                 exit = true;
             }
 
@@ -284,6 +292,15 @@ int main()
             DrawText("Retro Snake", offset - 5, 20, 40, darkGreen);
             DrawText(TextFormat("%i", game.score), offset - 5, offset + cellSize * cellCount + 10, 40, darkGreen);
             game.Draw();
+            DrawText("Menu", 713, 20, 40, darkGreen);
+            backToMenuButton.Draw();
+
+            if(backToMenuButton.isPressed(mousePosition, mousePressed))
+            {
+                menu = true;
+                std::cout << "Merge butonul!" << std::endl;
+                game.GameOver();
+            }
         }
 
 
